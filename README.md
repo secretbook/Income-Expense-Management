@@ -9,7 +9,8 @@ Created with **PHP** for **BackEnd** and **FrontEnd** with **Javascript**, **Boo
 
 **2.** This is Home Page where we can see details of Total Balance and expanse and income amount or we can add on transaction based on Income and Expanse.
 
-![image](https://github.com/user-attachments/assets/62119645-bbcf-4cdd-ac1d-c89ef05b5d58)
+![image](https://github.com/user-attachments/assets/5ca73b33-1cde-43da-8ad7-bdaadba3487d)
+
  
 
 
