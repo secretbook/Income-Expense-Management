@@ -11,6 +11,14 @@ Created with **PHP** for **BackEnd** and **FrontEnd** with **Javascript**, **Boo
 
 ![image](https://github.com/user-attachments/assets/5ca73b33-1cde-43da-8ad7-bdaadba3487d)
 
+**3.** This is Reports of Income and Expanse.
+
+![image](https://github.com/user-attachments/assets/385db20a-81a7-4743-82b0-546342161f4d)
+
+![image](https://github.com/user-attachments/assets/3ac7eff9-ce79-45ea-b6e4-76ebf5fd626d)
+
+
+
  
 
 
