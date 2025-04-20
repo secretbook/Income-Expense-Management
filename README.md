@@ -1,5 +1,5 @@
 **Details About The Project:-**
-Created with **PHP** for **BackEnd** and **FrontEnd** with **Javascript**, **Bootstrap**,**HTML**, **CSS** and for **Database** used **PhpMyAdmin** with **MySql**
+Created with **PHP** for **BackEnd** and **FrontEnd** with **Javascript**, **Bootstrap**, **HTML**, **CSS** and for **Database** used **PhpMyAdmin** with **MySql**
 
 **1.** This is the Login Page:- login with the 
      Email:- user@gmail.com
