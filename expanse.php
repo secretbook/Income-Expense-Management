@@ -1,23 +1,26 @@
-    <?php
-    include("session.php");
+<?php
+    include "session.php";
     $tablename = "transactions";
-    $tablekey = "tansid";
-    $pagename = "expanse.php";
+    $tablekey  = "tansid";
+    $pagename  = "expanse.php";
 
-    if (isset($_GET['fromdate']))
+    if (isset($_GET['fromdate'])) {
         $fromdate = $_GET['fromdate'];
-    else
+    } else {
         $fromdate = "";
+    }
 
-    if (isset($_GET['todate']))
+    if (isset($_GET['todate'])) {
         $todate = $_GET['todate'];
-    else
+    } else {
         $todate = "";
+    }
 
-    if (isset($_GET['category']))
+    if (isset($_GET['category'])) {
         $category = $_GET['category'];
-    else
+    } else {
         $category = "";
+    }
 
     $cond = " where type = 0 ";
     if ($fromdate != "" && $todate != "") {
@@ -28,7 +31,7 @@
         $cond .= " and category = '$category'";
     }
 
-    ?>
+?>
 
 
     <!doctype html>
@@ -37,7 +40,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Expanse</title>
+        <title>Expense</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     </head>
     <style>
@@ -67,119 +70,118 @@
 
 
     <body>
-        <?php include("header.php"); ?>
+        <?php include "header.php"; ?>
 
         <!-- As a heading -->
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="my-3">
-                        <nav class="navbar fw-bold justify-content-center mb-5 fs-4" style="background-color: hsl(92, 88%, 65%);">
-                            EXPANSE REPORT
-                        </nav>
-                        <form id="myForm" class="row g-3" action="" method="get">
-                            <div class="form-group mt-3 mb-2">
-                                <div class="row">
-                                    <div class="col-lg-3 col-sm-3 ps-3">
-                                        <label class="fw-bolder" for="datepicker">Date: From</label>
-                                        <input type="date" class="form-control " id="fromdate" name="fromdate" value="<?php echo $fromdate; ?>">
-                                        <b>
-                                            <div id="fromdateError" class="formerror"></div>
-                                        </b>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-3">
-                                        <label class="fw-bolder " for="datepicker">Date: To</label>
-                                        <input type="date" class="form-control " id="todate" name="todate" value="<?php echo $todate; ?>">
-                                        <b>
-                                            <div id="todateError" class="formerror"></div>
-                                        </b>
-                                    </div>
-                                    <div class="col-lg-2 col-sm-2 ">
-                                        <label class="fw-bolder" for="category">Category:</label>
-                                        <select class="form-select" id="category" name="category" aria-label="Default select example">
-                                            <option value="" selected>All Categories</option>
-                                            <option value="Salary">Salary</option>
-                                            <option value="Business">Business</option>
-                                            <option value="Foods">Foods</option>
-                                            <option value="Shopping">Shopping</option>
-                                            <option value="Loan">Loan</option>
-                                            <option value="Debt">Debt</option>
-                                            <option value="Gift">Gift</option>
-                                            <option value="Others">Others</option>
-                                        </select>
-                                        <b>
-                                            <div id="categoryError" class="formerror"></div>
-                                        </b>
-                                        <script type="text/javascript">
-                                            document.getElementById("category").value = '<?php echo $category; ?>';
-                                        </script>
-                                    </div>
-                                    <div class="col-lg-2 col-sm-2 mt-4 mb-4 ps-3">
-                                        <input type="submit" class="btn btn-warning w-100" value="Search">
-                                    </div>
-                                    <div class="col-lg-2 col-sm-2 mt-4 mb-4">
-                                        <a class="btn btn-danger w-100" href="expanse.php">Reset</a>
-                                    </div>
-                                </div>
-                                <!-- <div class="row">
-                                </div> -->
-                            </div>
-                        </form>
+    <div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="my-3">
 
-                        <!-- Table -->
-                        <table class="table table-success table-striped my-3 ps-3">
-                            <tbody>
-                                <thead>
-                                    <tr>
-                                        <th scope="col">S.No.</th>
-                                        <th scope="col">Label</th>
-                                        <th scope="col">Categories</th>
-                                        <th scope="col">Payment Mode</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col" class='text-end'>Amount</th>
-                                        <th scope="col">Edit</th>
-                                        <th scope="col">Delete</th>
-                                    </tr>
-                                </thead>
-                            </tbody>
-                            <!-- code for Table -->
-                            <?php
-                            $sql = "SELECT * FROM `transactions` $cond";
-                            $result = mysqli_query($conn, $sql);
-                            $tansid = 0;
-                            $nettotal = 0;
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                $tansid = $tansid + 1;
-                                $nettotal += $row["amount"];
+                <!-- Title -->
+                <nav class="navbar fw-bold justify-content-center mb-4 fs-4 rounded"
+                     style="background-color: hsl(92, 88%, 65%);">
+                    EXPENSE REPORT
+                </nav>
 
-                                echo " <tr>
-                            <th scope='row'>" . $tansid . "</th>
-                            <td>" . $row["label"] . "</td>
-                            <td>" . $row["category"] . "</td>
-                            <td>" . $row["paymentMode"] . "</td>
-                            <td>" . $row["cdate"] . "</td>
-                            <td class='text-end'>" . $row["amount"] . "</td>
-
-                            <td><a href='home.php?tansid=$row[tansid]' class='btn btn-sm btn-primary'>Edit</a></td>
-                             <td><a class='btn btn-sm btn-danger' onclick='delete_record($row[tansid]);'>Delete</a></td>
-                            </tr>";
-                            }
-                            ?>
-
-                            <tr>
-                                <td colspan="5">Total Amount</td>
-                                <td class="text-end"><?php echo $nettotal; ?></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-
-                        </table>
-
+                <!-- Filter Form -->
+                <form id="myForm" class="row g-3 mb-4" action="" method="get">
+                    <div class="col-lg-3 col-sm-6">
+                        <label class="fw-bolder" for="fromdate">Date: From</label>
+                        <input type="date" class="form-control" id="fromdate"
+                               name="fromdate" value="<?php echo $fromdate; ?>">
+                        <div id="fromdateError" class="formerror"></div>
                     </div>
 
-                </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <label class="fw-bolder" for="todate">Date: To</label>
+                        <input type="date" class="form-control" id="todate"
+                               name="todate" value="<?php echo $todate; ?>">
+                        <div id="todateError" class="formerror"></div>
+                    </div>
+
+                    <div class="col-lg-2 col-sm-6">
+                        <label class="fw-bolder" for="category">Category:</label>
+                        <select class="form-select" id="category" name="category">
+                            <option value="">All Categories</option>
+                            <option value="Salary">Salary</option>
+                            <option value="Business">Business</option>
+                            <option value="Foods">Foods</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Loan">Loan</option>
+                            <option value="Debt">Debt</option>
+                            <option value="Gift">Gift</option>
+                            <option value="Others">Others</option>
+                        </select>
+                        <div id="categoryError" class="formerror"></div>
+                        <script>
+                            document.getElementById("category").value = "<?php echo $category; ?>";
+                        </script>
+                    </div>
+
+                    <div class="col-lg-2 col-sm-6 d-flex align-items-end">
+                        <input type="submit" class="btn btn-warning w-100" value="Search">
+                    </div>
+
+                    <div class="col-lg-2 col-sm-6 d-flex align-items-end">
+                        <a class="btn btn-danger w-100" href="expanse.php">Reset</a>
+                    </div>
+                </form>
+
+                <!-- Table -->
+                <table class="table table-success table-striped shadow-sm">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th scope="col">S.No.</th>
+                            <th scope="col">Label</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Payment Mode</th>
+                            <th scope="col">Date</th>
+                            <th scope="col" class="text-end">Amount</th>
+                            <th scope="col">Edit</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            $sql      = "SELECT * FROM `transactions` $cond ORDER BY cdate DESC";
+                            $result   = mysqli_query($conn, $sql);
+                            $tansid   = 0;
+                            $nettotal = 0;
+
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                $tansid++;
+                                $nettotal += $row["amount"];
+                                $formattedDate   = date("d-m-Y", strtotime($row["cdate"]));
+                                $formattedAmount = number_format($row["amount"]);
+
+                                echo "
+                                <tr>
+                                    <th scope='row'>{$tansid}</th>
+                                    <td>{$row['label']}</td>
+                                    <td>{$row['category']}</td>
+                                    <td>{$row['paymentMode']}</td>
+                                    <td>{$formattedDate}</td>
+                                    <td class='text-end'>{$formattedAmount}</td>
+                                    <td><a href='home.php?tansid={$row['tansid']}' class='btn btn-sm btn-primary'>Edit</a></td>
+                                    <td><button class='btn btn-sm btn-danger' onclick='delete_record({$row['tansid']});'>Delete</button></td>
+                                </tr>
+                            ";
+                            }
+                        ?>
+                        <tr class="fw-bold">
+                            <td colspan="5" class="text-end">Total Amount</td>
+                            <td class="text-end"><?php echo number_format($nettotal, 2); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </div>
         </div>
+    </div>
+</div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     </body>

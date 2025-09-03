@@ -1,68 +1,65 @@
 <?php
-include("session.php");
-$tablename = "rem";
-$tablekey = "rem_id";
-$pagename = "reminder.php";
+    include "session.php";
+    $tablename = "rem";
+    $tablekey  = "rem_id";
+    $pagename  = "reminder.php";
 
+    // Edit/Update Data
+    if (isset($_GET['rem_id'])) {
+        $rem_id = $_GET['rem_id'];
+    } else {
+        $rem_id = 0;
+    }
 
-// Edit/Update Data
-if (isset($_GET['rem_id']))
-  $rem_id = $_GET['rem_id'];
-else
-  $rem_id = 0;
+    if ($rem_id > 0) {
+        $sql = "select * from rem where rem_id='$rem_id'";
+        $res = mysqli_query($conn, $sql);
+        $row = mysqli_fetch_array($res);
 
+        $rem_start = $row['rem_start'];
+        $rem_end   = $row['rem_end'];
+        $rem_desc  = $row['rem_desc'];
+        $btnvalue  = "UPDATE RECORD";
+    } else {
+        $btnvalue  = "ADD NEW RECORD";
+        $rem_start = "";
+        $rem_end   = "";
+        $rem_desc  = "";
+    }
 
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-if ($rem_id > 0) {
-  $sql = "select * from rem where rem_id='$rem_id'";
-  $res = mysqli_query($conn, $sql);
-  $row = mysqli_fetch_array($res);
+        // variables to be inserted into the table
+        $rem_start = $_POST['rem_start'];
+        $rem_end   = $_POST['rem_end'];
+        $rem_desc  = $_POST['rem_desc'];
+        $rem_id    = $_POST['rem_id'];
 
-  $rem_start =  $row['rem_start'];
-  $rem_end  = $row['rem_end'];
-  $rem_desc = $row['rem_desc'];
-  $btnvalue = "UPDATE RECORD";
-} else {
-  $btnvalue = "ADD NEW RECORD";
-  $rem_start = "";
-  $rem_end  = "";
-  $rem_desc = "";
-}
+        if ($rem_start != "" && $rem_desc != "") {
 
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-  // variables to be inserted into the table
-  $rem_start = $_POST['rem_start'];
-  $rem_end = $_POST['rem_end'];
-  $rem_desc = $_POST['rem_desc'];
-  $rem_id = $_POST['rem_id'];
-
-  if ($rem_start != "" && $rem_desc != "") {
-
-    if ($rem_id == 0) {
-      $sql = "insert into rem set
+            if ($rem_id == 0) {
+                $sql = "insert into rem set
         rem_start = '$rem_start',
         rem_end = '$rem_end',
         rem_desc = '$rem_desc'";
-      $result = mysqli_query($conn, $sql);
-       // Clear input field variables after successful insertion
-      //  $rem_start = "";
-      //  $rem_end = "";
-      //  $rem_desc = "";
-      //  $rem_id = 0;
-    } else {
-      $sql = "update rem set
+                $result = mysqli_query($conn, $sql);
+                // Clear input field variables after successful insertion
+                //  $rem_start = "";
+                //  $rem_end = "";
+                //  $rem_desc = "";
+                //  $rem_id = 0;
+            } else {
+                $sql = "update rem set
         rem_start = '$rem_start',
         rem_end = '$rem_end',
         rem_desc = '$rem_desc'
         where rem_id='$rem_id'";
-      $result = mysqli_query($conn, $sql);
-      
+                $result = mysqli_query($conn, $sql);
+
+            }
+        }
+        echo "<script>location='$pagename'</script>";
     }
-  }
-  echo "<script>location='$pagename'</script>";
-}
 ?>
 
 
@@ -117,87 +114,105 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </style>
 
 <body>
-  <?php include("header.php"); ?>
+  <?php include "header.php"; ?>
+<!-- Container -->
+<div class="container d-flex justify-content-center align-items-center mt-5">
+  <div class="card bg-body-secondary w-50 shadow-lg p-4 rounded-3">
+    <div class="card-body">
+      <h2 class="mb-4">Reminder</h2>
 
-  <!-- Container -->
-  <div class="container d-flex justify-content-center align-content-center">
-    <div class="card bg-body-secondary w-50 mx-3 my-3 p-3 mt-5 ">
-      <div class="card-body">
-        <h1 class="">Reminder</h1><br />
-        <!-- Form -->
-        <form id="form" action="" method="post">
-          <div class="mb-3">
-            <div class="row g-3 align-items-center">
-              <div class="col-lg-12 col-sm-12">
-                <div class="">
-                  <label class="fw-bolder" for="datepicker">Date: From</label>
-                  <input type="date" class="form-control" id="fromdate" name="rem_start" value="<?php echo $rem_start; ?>">
-                  <b>
-                    <div id="fromdateError" class="formerror"></div>
-                  </b>
-                </div><br />
-                <!-- </div> -->
-                <!-- <div class="col-6 "> -->
-                <div>
-                  <label class="fw-bolder" for="datepicker">Date: To</label>
-                  <input type="date" class="form-control" id="todate" name="rem_end" value="<?php echo $rem_end; ?>">
-                  <b>
-                    <div id="todateError" class="formerror"></div>
-                  </b>
-                </div><br />
-                <div>
-                  <label class="fw-bolder" for="textarea">Description</label>
-                  <textarea class="form-control" id="desc" name="rem_desc" rows="3"><?php echo $rem_desc; ?></textarea>
-                  <b>
-                    <div id="descError" class="formerror"></div>
-                  </b>
-                </div>
-              </div class="col-lg-12 col-sm-12">
-              <input type="hidden" name="rem_id" value="<?php echo $rem_id ?>">
-              <input type="submit" class="btn btn-primary width=100%" value="<?php echo $btnvalue; ?>">
-            </div>
-          </div>
-        </form>
-      </div>
+      <!-- Form -->
+      <form id="form" action="" method="post">
+        <div class="mb-3">
+          <label class="fw-bold" for="fromdate">Date: From</label>
+          <input
+            type="date"
+            class="form-control"
+            id="fromdate"
+            name="rem_start"
+            value="<?php echo $rem_start; ?>"
+          >
+          <div id="fromdateError" class="formerror text-danger fw-bold"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="fw-bold" for="todate">Date: To</label>
+          <input
+            type="date"
+            class="form-control"
+            id="todate"
+            name="rem_end"
+            value="<?php echo $rem_end; ?>"
+          >
+          <div id="todateError" class="formerror text-danger fw-bold"></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="fw-bold" for="desc">Description</label>
+          <textarea
+            class="form-control"
+            id="desc"
+            name="rem_desc"
+            rows="3"
+          ><?php echo $rem_desc; ?></textarea>
+          <div id="descError" class="formerror text-danger fw-bold"></div>
+        </div>
+
+        <input type="hidden" name="rem_id" value="<?php echo $rem_id; ?>">
+        <button type="submit" class="btn btn-primary w-100">
+          <?php echo $btnvalue; ?>
+        </button>
+      </form>
     </div>
   </div>
-  <!-- table content -->
-  <div class="tab-content">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">No.</th>
-          <th scope="col">Date: Start</th>
-          <th scope="col">Date: End</th>
-          <th scope="col">Description</th>
-          <th scope="col">Edit</th>
-          <th scope="col">Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- code for Table -->
-        <?php
-        // $sql = "SELECT * FROM `rem` order by rem_id desc";  // data showing in descending order in table
-        // Show data into table
-        $sql = "SELECT * FROM `rem` ";
-        $result = mysqli_query($conn, $sql);
-        $rem_id = 0;
-        while ($row = mysqli_fetch_assoc($result)) {
-          $rem_id = $rem_id + 1;
-          echo "<tr>
-          <th scope='row'>" . $rem_id . "</th>
-          <td>" . $row["rem_start"] . "</td>
-          <td>" . $row["rem_end"] . "</td>
-          <td>" . $row["rem_desc"] . "</td>
-          <td><a href='reminder.php?rem_id=$row[rem_id]' class='btn btn-sm btn-primary'>Edit</a></td>
-          <td><a class='btn btn-sm btn-danger' onclick='delete_record($row[rem_id]);'  >Delete</a></td>
-        </tr>
-        ";
-        }
-        ?>
-      </tbody>
-    </table>
+</div>
+
+<!-- Table Section -->
+<div class="container mt-5">
+  <div class="card shadow-lg rounded-3">
+    <div class="card-body">
+      <h4 class="mb-3">Reminder List</h4>
+      <table class="table table-striped table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Date: Start</th>
+            <th scope="col">Date: End</th>
+            <th scope="col">Description</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+              $sql     = "SELECT * FROM `rem` ORDER BY rem_id DESC"; // Data in descending order
+              $result  = mysqli_query($conn, $sql);
+              $counter = 1;
+
+              while ($row = mysqli_fetch_assoc($result)) {
+                  echo "
+              <tr>
+                <th scope='row'>{$counter}</th>
+                <td>" . date("d-m-Y", strtotime($row['rem_start'])) . "</td>
+                <td>" . date("d-m-Y", strtotime($row['rem_end'])) . "</td>
+                <td>{$row['rem_desc']}</td>
+                <td>
+                  <a href='reminder.php?rem_id={$row['rem_id']}' class='btn btn-sm btn-primary'>Edit</a>
+                </td>
+                <td>
+                  <button class='btn btn-sm btn-danger' onclick='delete_record({$row['rem_id']});'>Delete</button>
+                </td>
+              </tr>
+            ";
+                  $counter++;
+              }
+          ?>
+        </tbody>
+      </table>
+    </div>
   </div>
+</div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
   </script>
 </body>
@@ -209,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     document.getElementById('descError').innerText = '';
 
 
-    // Validate 
+    // Validate
     var fromdate = document.getElementById('fromdate').value;
     var todate = document.getElementById('todate').value;
     var desc = document.getElementById('desc').value;

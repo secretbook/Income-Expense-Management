@@ -1,59 +1,58 @@
 <?php
-include("session.php");
-$tablename = "lists";
-$tablekey = "todo_id";
-$pagename = "todo.php";
+    include "session.php";
+    $tablename = "lists";
+    $tablekey  = "todo_id";
+    $pagename  = "todo.php";
 
-// Edit/Update Data
-if (isset($_GET['todo_id']))
-    $todo_id = $_GET['todo_id'];
-else
-    $todo_id = 0;
+    // Edit/Update Data
+    if (isset($_GET['todo_id'])) {
+        $todo_id = $_GET['todo_id'];
+    } else {
+        $todo_id = 0;
+    }
 
-if ($todo_id > 0) {
-    $sql = "select * from lists where todo_id = '$todo_id'";
-    $res = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_array($res);
-    // print_r($row);
-    $todo_text = $row['todo_text'];
-    $todo_status = $row['todo_status'];
-    $todo_mobile = $row['todo_mobile'];
-    $btnvalue = "UPDATE RECORD";
-} else {
-    $btnvalue = "ADD NEW RECORD";
-    $todo_text = "";
-    $todo_status = "";
-    $todo_mobile = "";
-}
+    if ($todo_id > 0) {
+        $sql = "select * from lists where todo_id = '$todo_id'";
+        $res = mysqli_query($conn, $sql);
+        $row = mysqli_fetch_array($res);
+        // print_r($row);
+        $todo_text   = $row['todo_text'];
+        $todo_status = $row['todo_status'];
+        $todo_mobile = $row['todo_mobile'];
+        $btnvalue    = "UPDATE RECORD";
+    } else {
+        $btnvalue    = "ADD NEW RECORD";
+        $todo_text   = "";
+        $todo_status = "";
+        $todo_mobile = "";
+    }
 
+    // POST Method
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $todo_text   = $_POST['todo_text'];
+        $todo_status = $_POST['todo_status'];
+        $todo_mobile = $_POST['todo_mobile'];
 
-
-// POST Method
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $todo_text = $_POST['todo_text'];
-    $todo_status = $_POST['todo_status'];
-    $todo_mobile = $_POST['todo_mobile'];
-
-    if ($todo_id == 0) {
-        $sql = "insert into lists set
+        if ($todo_id == 0) {
+            $sql = "insert into lists set
         todo_text = '$todo_text',
         todo_status = '$todo_status',
         todo_mobile = '$todo_mobile'";
-        $res = mysqli_query($conn, $sql);
-    } else {
-        $sql = "update lists set
+            $res = mysqli_query($conn, $sql);
+        } else {
+            $sql = "update lists set
         todo_text = '$todo_text',
         todo_status = '$todo_status',
         todo_mobile = '$todo_mobile'
         where todo_id='$todo_id'";
-        // echo "update lists set
-        // todo_text = '$todo_text',
-        // todo_status = '$todo_status'
-        // where todo_id='$todo_id'"; exit;
-        $res = mysqli_query($conn, $sql);
+            // echo "update lists set
+            // todo_text = '$todo_text',
+            // todo_status = '$todo_status'
+            // where todo_id='$todo_id'"; exit;
+            $res = mysqli_query($conn, $sql);
+        }
+        echo "<script>location='$pagename'</script>";
     }
-    echo "<script>location='$pagename'</script>";
-}
 ?>
 
 
@@ -105,91 +104,127 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
-    <?php include("header.php"); ?>
+    <?php include "header.php"; ?>
 
     <!-- Card -->
-    <div class="container d-flex justify-content-center align-content-center mt-5 border-radius-rounded shadow">
-        <div class="card w-100">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-12 col-sm-12">
-                        <h1 class="">ToDo App</h1>
-                    </div>
-                </div>
-                <form id="myForm" action="" method="post">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-3 col-sm-3">
-                            <input type="text" id="text" name="todo_text" class="form-control border-danger-subtle " placeholder="Enter a task here" value="<?php echo $todo_text; ?>" />
-                            <b>
-                                <div id="textError" class="formerror"></div>
-                            </b>
-                        </div>
-                        <div class="col-lg-3 col-sm-3">
-                            <select class="form-select w-20 border-success-subtle" id="status" name="todo_status" aria-label="Default select example">
-                                <option value="" selected>Status</option>
-                                <option value="In progress">In progess</option>
-                                <option value="Completed">Completed</option>
-                                <option value="Not required">Not required</option>
-                            </select>
-                            <script type="text/javascript">
-                                document.getElementById("status").value = "<?php echo $todo_status; ?>";
-                            </script>
-                            <b>
-                                <div id="statusError" class="formerror"></div>
-                            </b>
-                        </div>
-                        <div class="col-lg-3 col-sm-3">
-                            <input type="text" id="todo_mobile" name="todo_mobile" class="form-control border-danger-subtle " placeholder="Enter a Mobile here" value="<?php echo $todo_mobile; ?>" />
-                            <b>
-                                <div id="textError" class="formerror"></div>
-                            </b>
-                        </div>
-                        <div class="col-lg-3 col-sm-3">
-                            <input type="hidden" name="todo_id" value="<?php echo $todo_id ?>">
-                            <input type="submit" class="btn btn-warning w-100" value="<?php echo $btnvalue ?>">
-                        </div>
-                    </div>
-                </form>
+<div class="container mt-5">
+  <div class="card shadow rounded-3">
+    <div class="card-body">
+      <!-- Title -->
+      <h2 class="text-center mb-4">ToDo App</h2>
 
-                <!-- Table -->
-                <div class="tab-content">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">SNo.</th>
-                                <th scope="col">Todo item</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Mobile</th>
-                                <th scope="col">Edit</th>
-                                <th scope="col">Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $sql = "SELECT * FROM `lists`";
-                            $result = mysqli_query($conn, $sql);
-                            $todo_id = 0;
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                $todo_id = $todo_id + 1;
-                                echo "<tr>
-                                <th scope='row'>" . $todo_id . "</th>
-                                <td>" . $row["todo_text"] . "</td>
-                                <td>" . $row["todo_status"] . "</td>
-                                <td>" . $row["todo_mobile"] . "</td>
-                                <td> <a href='todo.php?todo_id=$row[todo_id]' class='btn btn-primary'>Edit</a></td>
-                               <td><a type='button' class='btn btn-danger' onclick='delete_record($row[todo_id]);'>Delete</a></td>
-                            </tr>
-                            ";
-                            }
+      <!-- Form -->
+      <form id="myForm" action="" method="post">
+        <div class="row g-3 justify-content-center">
 
-                            ?>
+          <!-- Task Text -->
+          <div class="col-lg-3 col-sm-6">
+            <input
+              type="text"
+              id="text"
+              name="todo_text"
+              class="form-control border-danger-subtle"
+              placeholder="Enter a task here"
+              value="<?php echo $todo_text; ?>"
+            >
+            <div id="textError" class="formerror text-danger fw-bold"></div>
+          </div>
 
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+          <!-- Status -->
+          <div class="col-lg-3 col-sm-6">
+            <select
+              class="form-select border-success-subtle"
+              id="status"
+              name="todo_status"
+            >
+              <option value="">Status</option>
+              <option value="In progress">In Progress</option>
+              <option value="Completed">Completed</option>
+              <option value="Not required">Not Required</option>
+            </select>
+            <script>
+              document.getElementById("status").value = "<?php echo $todo_status; ?>";
+            </script>
+            <div id="statusError" class="formerror text-danger fw-bold"></div>
+          </div>
+
+          <!-- Mobile -->
+          <div class="col-lg-3 col-sm-6">
+            <input
+              type="text"
+              id="todo_mobile"
+              name="todo_mobile"
+              class="form-control border-danger-subtle"
+              placeholder="Enter mobile here"
+              value="<?php echo $todo_mobile; ?>"
+            >
+            <div id="mobileError" class="formerror text-danger fw-bold"></div>
+          </div>
+
+          <!-- Submit -->
+          <div class="col-lg-3 col-sm-6">
+            <input type="hidden" name="todo_id" value="<?php echo $todo_id; ?>">
+            <button type="submit" class="btn btn-warning w-100 fw-bold">
+              <?php echo $btnvalue; ?>
+            </button>
+          </div>
         </div>
+      </form>
+
+      <!-- Table -->
+      <div class="mt-4">
+        <table class="table table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>S.No.</th>
+              <th>Todo Item</th>
+              <th>Status</th>
+              <th>Mobile</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+                $sql     = "SELECT * FROM `lists` ORDER BY todo_id DESC";
+                $result  = mysqli_query($conn, $sql);
+                $counter = 0;
+
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $counter++;
+
+                    // Status badge
+                    $statusBadge = "<span class='badge bg-secondary'>{$row['todo_status']}</span>";
+                    if ($row['todo_status'] == "Completed") {
+                        $statusBadge = "<span class='badge bg-success'>Completed</span>";
+                    } elseif ($row['todo_status'] == "In progress") {
+                        $statusBadge = "<span class='badge bg-warning text-dark'>In Progress</span>";
+                    } elseif ($row['todo_status'] == "Not required") {
+                        $statusBadge = "<span class='badge bg-danger'>Not Required</span>";
+                    }
+
+                    echo "
+                <tr>
+                  <td>{$counter}</td>
+                  <td>{$row['todo_text']}</td>
+                  <td>{$statusBadge}</td>
+                  <td>{$row['todo_mobile']}</td>
+                  <td>
+                    <a href='todo.php?todo_id={$row['todo_id']}' class='btn btn-sm btn-primary'>Edit</a>
+                  </td>
+                  <td>
+                    <button class='btn btn-sm btn-danger' onclick='delete_record({$row['todo_id']});'>Delete</button>
+                  </td>
+                </tr>
+              ";
+                }
+            ?>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
     </script>

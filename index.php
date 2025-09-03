@@ -1,37 +1,35 @@
 <?php
-include("config.php");
+    include "config.php";
 
-// POST Method
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  // variables to be inserted into the table
-  $email = $_POST['email'];
-  $password = $_POST['password'];
+    // POST Method
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // variables to be inserted into the table
+        $email    = $_POST['email'];
+        $password = $_POST['password'];
 
+        if ($email != "" && $password != "") {
+            // sql query to be executed
+            $sql    = "select * from users where email='$email'  and password = '$password'";
+            $result = mysqli_query($conn, $sql);
 
-  if ($email != "" && $password != "") {
-    // sql query to be executed 
-    $sql = "select * from users where email='$email'  and password = '$password'";
-    $result = mysqli_query($conn, $sql);
+            if ($result) {
 
-    if ($result) {
+                $count = mysqli_num_rows($result);
+                //die;
+                if ($count == 1) {
+                    $row = mysqli_fetch_array($result);
+                    $Sno = $row['Sno'];
 
-      $count = mysqli_num_rows($result);
-      //die;
-      if ($count == 1) {
-        $row =  mysqli_fetch_array($result);
-        $Sno =  $row['Sno'];
+                    //session start security
+                    session_start();
+                    $_SESSION['Sno'] = $Sno;
 
-        //session start security
-        session_start();
-        $_SESSION['Sno'] = $Sno;
-
-        //redirect to insided
-        header("Location: home.php");
-      }
+                    //redirect to insided
+                    header("Location: home.php");
+                }
+            }
+        }
     }
-  }
-}
-
 
 ?>
 
@@ -43,85 +41,72 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <title>Login</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <!-- <script defer src="./Script/login.js"></script> -->
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0
-    }
-
+    <style>
     body {
-      background-image: url(img/2.jpg);
-      background-size: 100% auto;
-      background-position: no-repeat;
+      background: #f8f9fa url("img/2.jpg") no-repeat center center / cover;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
-
-    ul {
-      gap: 25px;
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.9); /* semi-transparent white */
+      backdrop-filter: blur(6px); /* adds a nice glass effect */
     }
-
-    li a.active {
-      background-color: rgb(245, 243, 118);
-      color: white;
-    }
-
-    li a:hover:not(.active) {
-      background-color: #f42828;
-      color: white;
-    }
-
-
-    h1 {
-      text-align: center;
-      padding-bottom: 20px;
-    }
-
-    .error {
+    .form-label span {
       color: red;
     }
-
-    
+    .error {
+      color: red;
+      font-size: 0.9rem;
+    }
   </style>
+
 </head>
 
 <body>
 
   <!-- Login Page -->
-  <div class="container d-flex justify-content-center align-content-center">
-    <div class="card  bg-light text-dark mb-15  w-50 mx-3 my-3 p-3 mt-5 ">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-lg-12 col-sm-12">
-            <div class="col-lg-12 col-sm-12">
-              <form action="" method="post" id="myForm">
-                <div class="mb-3">
-                  <h1 class="mb-5">Login Page</h1>
-                  <label for="email" class="form-label">Email address <span style="color:red;">*</span></label>
-                  <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
-                  <b>
-                    <span id="emailError" class="error"></span>
-                  </b>
-                </div>
-                <div class="mb-3">
-                  <label for="password" class="form-label">Password<span style="color:red;">*</span></label>
-                  <input type="password" class="form-control" name="password" id="password">
-                  
-                  <b>
-                    <span id="passwordError" class="error"></span>
-                  </b>
-                </div>
-                <!-- <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Remember me</label>
-              </div> -->
-                <input type="submit" class="btn btn-primary" id="submit">
-              </form>
-            </div>
+    <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7 col-sm-10">
+        <div class="card bg-white p-4">
+          <div class="card-body">
+            <h2 class="text-center mb-4">Login</h2>
+            <form action="" method="post" id="myForm">
+
+              <!-- Email -->
+              <div class="mb-3">
+                <label for="email" class="form-label">Email address <span>*</span></label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
+                <span id="emailError" class="error"></span>
+              </div>
+
+              <!-- Password -->
+              <div class="mb-3">
+                <label for="password" class="form-label">Password <span>*</span></label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
+                <span id="passwordError" class="error"></span>
+              </div>
+
+              <!-- Submit -->
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Login</button>
+              </div>
+
+              <!-- Extra -->
+              <div class="text-center mt-3">
+                <small class="text-muted">Don’t have an account? <a href="#">Register</a></small>
+              </div>
+
+            </form>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
 </body>
 

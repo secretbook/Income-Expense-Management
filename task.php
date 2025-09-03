@@ -1,16 +1,15 @@
-    <?php
-    include("session.php");
+<?php
+    include "session.php";
     $tablename = "task";
-    $tablekey = "task_id";
-    $pagename = "task.php";
-
-
+    $tablekey  = "task_id";
+    $pagename  = "task.php";
 
     // Edit/Update Data
-    if (isset($_GET['task_id']))
+    if (isset($_GET['task_id'])) {
         $task_id = $_GET['task_id'];
-    else
+    } else {
         $task_id = 0;
+    }
 
     if ($task_id > 0) {
         // Edit --> Fetch Data
@@ -18,27 +17,27 @@
         $res = mysqli_query($conn, $sql);
         $row = mysqli_fetch_array($res);
 
-        $task_date = $row['task_date'];
-        $task_stime = $row['task_stime'];
-        $task_etime = $row['task_etime'];
-        $task_desc = $row['task_desc'];
+        $task_date     = $row['task_date'];
+        $task_stime    = $row['task_stime'];
+        $task_etime    = $row['task_etime'];
+        $task_desc     = $row['task_desc'];
         $task_priority = $row['task_priority'];
-        $btnvalue = "UPDATE RECORD";
+        $btnvalue      = "UPDATE RECORD";
     } else {
-        $btnvalue = "ADD NEW RECORD";
-        $task_date = "";
-        $task_stime = "";
-        $task_etime = "";
-        $task_desc = "";
+        $btnvalue      = "ADD NEW RECORD";
+        $task_date     = "";
+        $task_stime    = "";
+        $task_etime    = "";
+        $task_desc     = "";
         $task_priority = "";
     }
 
     // Insert --> METHOD for creating data into table
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $task_date = $_POST['task_date'];
-        $task_stime = $_POST['task_stime'];
-        $task_etime = $_POST['task_etime'];
-        $task_desc = $_POST['task_desc'];
+        $task_date     = $_POST['task_date'];
+        $task_stime    = $_POST['task_stime'];
+        $task_etime    = $_POST['task_etime'];
+        $task_desc     = $_POST['task_desc'];
         $task_priority = $_POST['task_priority'];
 
         if ($task_id == 0) {
@@ -62,7 +61,7 @@
         }
         echo "<script>location='$pagename'</script>";
     }
-    ?>
+?>
 
 
 
@@ -111,111 +110,144 @@
     </style>
 
     <body>
-        <?php include("header.php"); ?>
+        <?php include "header.php"; ?>
 
-        <!-- Form -->
-        <div class="container d-flex justify-content-center align-content-center">
-            <div class="card bg-body-secondary w-50 mx-3 my-3 p-3 mt-5 ">
-                <div class="card-body">
-                    <h1 class="">Task</h1><br />
-                    <form id="form" action="" method="post">
-                        <div class="mb-3">
-                            <div class="row g-3 align-items-center">
-                                <div class="col-lg-12 col-sm-12">
-                                    <div>
-                                        <label class="fw-bolder" for="datepicker">Date:</label>
-                                        <input type="date" class="form-control" id="date" name="task_date" value="<?php echo $task_date; ?>">
-                                        <b>
-                                            <div id="dateError" class="formerror"></div>
-                                        </b>
-                                    </div><br />
-                                    <div>
-                                        <label class="fw-bolder" for="datepicker">Time:Start</label>
-                                        <input type="time" class="form-control" id="fromtime" name="task_stime" value="<?php echo $task_stime; ?>">
-                                        <b>
-                                            <div id="fromtimeError" class="formerror"></div>
-                                        </b>
-                                    </div><br />
-                                    <div>
-                                        <label class="fw-bolder" for="datepicker">Time:End</label>
-                                        <input type="time" class="form-control" id="totime" name="task_etime" value="<?php echo $task_etime; ?>">
-                                        <b>
-                                            <div id="totimeError" class="formerror"></div>
-                                        </b>
-                                    </div><br />
-                                    <div>
-                                        <label class="fw-bolder" for="textarea">Description:</label>
-                                        <textarea class="form-control" id="desc" name="task_desc" rows="3"><?php echo $task_desc; ?></textarea>
-                                        <b>
-                                            <div id="descError" class="formerror"></div>
-                                        </b>
-                                    </div><br />
-                                    <div>
-                                        <label class="fw-bolder" for="textarea">Task Priority:</label>
-                                        <select class="form-select" name="task_priority" id="taskpriority" aria-label="Default select example">
-                                            <option value="" selected>Task Level</option>
-                                            <option value="low">Low</option>
-                                            <option value="medium">Medium</option>
-                                            <option value="high">High</option>
-                                        </select>
-                                        <script type="text/javascript">
-                                            document.getElementById("taskpriority").value = "<?php echo $task_priority ?>";
-                                        </script>
-                                        <b>
-                                            <div id="taskpriorityError" class="formerror"></div>
-                                        </b>
+<!-- Task Form -->
+<div class="container d-flex justify-content-center align-items-center">
+  <div class="card bg-body-secondary w-50 mx-3 my-3 p-3 mt-5 shadow-sm rounded-3">
+    <div class="card-body">
+      <h2 class="text-center mb-4">Task</h2>
 
-                                    </div>
-                                </div>
-                                <input type="hidden" name="task_id" value="<?php echo $task_id ?>">
-                                <input type="submit" class="btn btn-primary width=100%" value="<?php echo $btnvalue ?>">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-            </div>
+      <form id="form" action="" method="post">
+        <div class="mb-3">
+          <!-- Date -->
+          <label class="fw-bolder" for="date">Date:</label>
+          <input
+            type="date"
+            class="form-control"
+            id="date"
+            name="task_date"
+            value="<?php echo $task_date; ?>"
+          >
+          <div id="dateError" class="formerror fw-bold text-danger"></div>
         </div>
 
-        <!-- code for Table -->
-        <div class="tab-content">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">No.</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">TStart</th>
-                        <th scope="col">TEnd</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Task Priority</th>
-                        <th scope="col">Edit</th>
-                        <th scope="col">Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    // <!-- code for fetching Data into Table -->
-                    $sql = "SELECT * FROM `task`";
-                    $result = mysqli_query($conn, $sql);
-                    $task_id = 0;
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        $task_id = $task_id + 1;
-                        echo " <tr>
-                    <th scope='row'>" . $task_id . "</th>
-                    <td>" . $row["task_date"] . "</td>
-                    <td>" . $row["task_stime"] . "</td>
-                    <td>" . $row["task_etime"] . "</td>
-                    <td>" . $row["task_desc"] . "</td>
-                    <td>" . $row["task_priority"] . "</td>
-                    <td><a href='task.php?task_id=$row[task_id]' class='btn btn-sm btn-primary'>Edit</a></td>
-                    <td><a class='btn btn-sm btn-danger' onclick='delete_record($row[task_id]);'>Delete</a></td>
-                </tr>
-                ";
-                    }
-                    ?>
-                </tbody>
-            </table>
+        <!-- Time Start -->
+        <div class="mb-3">
+          <label class="fw-bolder" for="fromtime">Time: Start</label>
+          <input
+            type="time"
+            class="form-control"
+            id="fromtime"
+            name="task_stime"
+            value="<?php echo $task_stime; ?>"
+          >
+          <div id="fromtimeError" class="formerror fw-bold text-danger"></div>
         </div>
+
+        <!-- Time End -->
+        <div class="mb-3">
+          <label class="fw-bolder" for="totime">Time: End</label>
+          <input
+            type="time"
+            class="form-control"
+            id="totime"
+            name="task_etime"
+            value="<?php echo $task_etime; ?>"
+          >
+          <div id="totimeError" class="formerror fw-bold text-danger"></div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label class="fw-bolder" for="desc">Description:</label>
+          <textarea
+            class="form-control"
+            id="desc"
+            name="task_desc"
+            rows="3"
+          ><?php echo $task_desc; ?></textarea>
+          <div id="descError" class="formerror fw-bold text-danger"></div>
+        </div>
+
+        <!-- Priority -->
+        <div class="mb-3">
+          <label class="fw-bolder" for="taskpriority">Task Priority:</label>
+          <select
+            class="form-select"
+            name="task_priority"
+            id="taskpriority"
+          >
+            <option value="">Task Level</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+          <script>
+            document.getElementById("taskpriority").value = "<?php echo $task_priority; ?>";
+          </script>
+          <div id="taskpriorityError" class="formerror fw-bold text-danger"></div>
+        </div>
+
+        <!-- Hidden ID + Submit -->
+        <input type="hidden" name="task_id" value="<?php echo $task_id; ?>">
+        <button type="submit" class="btn btn-primary w-100">
+          <?php echo $btnvalue; ?>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Task Table -->
+<div class="container my-4">
+  <div class="card shadow-sm rounded-3">
+    <div class="card-body">
+      <h4 class="mb-3">Task List</h4>
+      <table class="table table-striped table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>No.</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+              $sql     = "SELECT * FROM `task` ORDER BY task_id DESC";
+              $result  = mysqli_query($conn, $sql);
+              $counter = 0;
+
+              while ($row = mysqli_fetch_assoc($result)) {
+                  $counter++;
+                  echo "
+              <tr>
+                <td>{$counter}</td>
+                <td>" . date("d-m-Y", strtotime($row['task_date'])) . "</td>
+                <td>" . date("h:i A", strtotime($row['task_stime'])) . "</td>
+                <td>" . date("h:i A", strtotime($row['task_etime'])) . "</td>
+                <td>{$row['task_desc']}</td>
+                <td class='fw-bold text-capitalize'>" . ucfirst($row['task_priority']) . "</td>
+                <td>
+                  <a href='task.php?task_id={$row['task_id']}' class='btn btn-sm btn-primary'>Edit</a>
+                </td>
+                <td>
+                  <button class='btn btn-sm btn-danger' onclick='delete_record({$row['task_id']});'>Delete</button>
+                </td>
+              </tr>
+            ";
+              }
+          ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
     </body>
     <script type="text/javascript">
@@ -228,7 +260,7 @@
             document.getElementById('taskpriorityError').innerText = '';
 
 
-            // Validate 
+            // Validate
             var date = document.getElementById('date').value;
             var fromtime = document.getElementById('fromtime').value;
             var totime = document.getElementById('totime').value;
