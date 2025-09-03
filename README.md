@@ -5,7 +5,7 @@ Created with **PHP** for **BackEnd** and **FrontEnd** with **Javascript**, **Boo
      Email:- user@gmail.com
      Password:-12345678
 
-![image](https://github.com/user-attachments/assets/5d5911ec-7296-4cf7-ab49-74d216a83bf7)
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/eea11c46-6741-48bf-a840-6b17199423c5" />
 
 **2.** This is Home Page where we can see details of Total Balance and expanse and income amount or we can add on transaction based on Income and Expanse.
 
